@@ -14,6 +14,12 @@ def detect_objects(image, saliency_map):
     h, w = image.shape[:2]
 
     for cnt in contours:
+        aspect_ratio = bw / float(bh)
+        # Heuristic: text blocks are wide and thin
+        is_text_like = aspect_ratio > 2.5 and bh < 0.25 * h
+        if is_text_like:
+            weight *= 2.5   # HARD PRIORITY
+        
         x, y, bw, bh = cv2.boundingRect(cnt)
         area = bw * bh
 

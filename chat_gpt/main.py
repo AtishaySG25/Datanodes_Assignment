@@ -24,13 +24,19 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 image = load_master_asset(INPUT_PATH)
 saliency = compute_saliency(image)
 objects = detect_objects(image, saliency)
-importance_map = generate_importance_map(image.shape, objects)
 
+importance_map = generate_importance_map(image.shape, objects)
 for name, (w, h, fmt) in ASSETS.items():
     if h < 400:
         result = reposition_objects(image, objects, w, h)
     else:
-        cropped = smart_crop(image, importance_map, min(w, image.shape[1]), min(h, image.shape[0]))
+        cropped = smart_crop(
+            image,
+            importance_map,
+            objects,
+            min(w, image.shape[1]),
+            min(h, image.shape[0])
+            )
         result = cv2.resize(cropped, (w, h))
 
     output_path = os.path.join(
