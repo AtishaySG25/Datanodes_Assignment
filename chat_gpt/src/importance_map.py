@@ -3,17 +3,29 @@ import numpy as np
 def generate_importance_map(image_shape, objects):
     """
     Creates a weighted importance heatmap from detected objects.
+    Adds padding to protect text and important regions from cropping.
     """
-    padding = 20  # pixels
-    x1 = max(0, x - padding)
-    y1 = max(0, y - padding)
-    x2 = min(image_shape[1], x + w + padding)
-    y2 = min(image_shape[0], y + h + padding)
-    importance_map[y1:y2, x1:x2] += obj["weight"]
-    
+
+    img_h, img_w = image_shape[:2]
+    importance_map = np.zeros((img_h, img_w), dtype=np.float32)
+
+    padding = 20  # safe margin around important objects
+
     for obj in objects:
         x, y, w, h = obj["bbox"]
-        importance_map[y:y+h, x:x+w] += obj["weight"]
+        weight = obj["weight"]
 
-    importance_map /= (importance_map.max() + 1e-6)
+        # ---- SAFE BOUNDS ----
+        x1 = max(0, x - padding)
+        y1 = max(0, y - padding)
+        x2 = min(img_w, x + w + padding)
+        y2 = min(img_h, y + h + padding)
+
+        importance_map[y1:y2, x1:x2] += weight
+
+    # ---- NORMALIZATION ----
+    max_val = importance_map.max()
+    if max_val > 0:
+        importance_map /= max_val
+
     return importance_map
