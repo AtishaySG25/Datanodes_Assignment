@@ -34,10 +34,11 @@ for name, (w, h, fmt) in ASSETS.items():
             image,
             importance_map,
             objects,
-            min(w, image.shape[1]),
-            min(h, image.shape[0])
+            target_w=w,
+            target_h=h
             )
-        result = cv2.resize(cropped, (w, h))
+result = cropped  # NO resize needed
+
 
     output_path = os.path.join(
         OUTPUT_DIR,
