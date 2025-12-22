@@ -8,8 +8,8 @@ from src.smart_crop import smart_crop
 from src.reposition import reposition_objects
 from src.renderer import save_image
 
-INPUT_PATH = "D:/Datanodes_Assignment/chat_gpt/input/master_assets/4548556.psd"
-OUTPUT_DIR = "output/secondary_assets"
+INPUT_PATH = "D:/Datanodes_Assignment/lady.psd"
+OUTPUT_DIR = "output/secondary_assets2"
 
 ASSETS = {
     "Image_Landscape": (1200, 628, "jpeg"),
@@ -27,7 +27,7 @@ objects = detect_objects(image, saliency)
 
 importance_map = generate_importance_map(image.shape, objects)
 for name, (w, h, fmt) in ASSETS.items():
-    if h < 400:
+    if h / w < 0.4:
         result = reposition_objects(image, objects, w, h)
     else:
         cropped = smart_crop(
@@ -37,8 +37,7 @@ for name, (w, h, fmt) in ASSETS.items():
             target_w=w,
             target_h=h
             )
-result = cropped  # NO resize needed
-
+        result = cropped  # NO resize needed
 
     output_path = os.path.join(
         OUTPUT_DIR,

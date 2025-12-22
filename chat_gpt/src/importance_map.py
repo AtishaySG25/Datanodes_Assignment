@@ -9,12 +9,10 @@ def generate_importance_map(image_shape, objects):
     img_h, img_w = image_shape[:2]
     importance_map = np.zeros((img_h, img_w), dtype=np.float32)
 
-    padding = 20  # safe margin around important objects
-
     for obj in objects:
         x, y, w, h = obj["bbox"]
         weight = obj["weight"]
-
+        padding = 40 if obj["weight"] > 0.7 else 15
         # ---- SAFE BOUNDS ----
         x1 = max(0, x - padding)
         y1 = max(0, y - padding)
