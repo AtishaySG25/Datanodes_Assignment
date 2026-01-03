@@ -1,0 +1,10 @@
+psd-tools
+Pillow
+opencv-python
+easyocr
+numpy
+torch  # required by easyocr (already in your env)
+
+# ==================== CONFIG ====================
+# INPUT_PSD = "D:/Datanodes_Assignment/grok/ad_resizer/input/Axis_Multicap_fund.psd"
+# OUTPUT_DIR = "D:/Datanodes_Assignment/grok/ad_resizer/output/output2"
